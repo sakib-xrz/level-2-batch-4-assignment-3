@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema<UserInterface, UserModel>(
       type: String,
       required: true,
       enum: ['admin', 'user'],
+      default: 'user',
     },
     isBlocked: {
       type: Boolean,
