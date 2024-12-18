@@ -1,1 +1,4 @@
-export interface AuthInterface {}
+export type LoginType = {
+  email: string;
+  password: string;
+};

@@ -47,8 +47,8 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-UserSchema.statics.isUserExists = async function (id: string) {
-  return await User.findById(id).select('+password');
+UserSchema.statics.isUserExists = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
 };
 
 UserSchema.statics.isPasswordMatched = async function (
