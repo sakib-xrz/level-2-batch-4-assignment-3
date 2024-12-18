@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
-import { LoginType } from './auth.interface';
+import { LoginType, RegisterType } from './auth.interface';
 import AuthUtils from './auth.utils';
 import config from '../../config';
 
@@ -33,15 +33,33 @@ const UserLogin = async (payload: LoginType) => {
     role: user.role,
   };
 
-  const accessToken = AuthUtils.CreateToken(
+  const token = AuthUtils.CreateToken(
     jwtPayload,
     config.jwt_access_token_secret as string,
     config.jwt_access_token_expires_in as string,
   );
 
-  return { accessToken };
+  return { token };
 };
 
-const AuthService = { UserLogin };
+const UserRegister = async (payload: RegisterType) => {
+  const isUserExists = await User.isUserExists(payload.email);
+
+  if (isUserExists) {
+    throw new AppError(httpStatus.CONFLICT, 'User already exists');
+  }
+
+  const user = await User.create({ ...payload, role: 'user' });
+
+  const result = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+  };
+
+  return result;
+};
+
+const AuthService = { UserLogin, UserRegister };
 
 export default AuthService;

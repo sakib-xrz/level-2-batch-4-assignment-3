@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://192.168.0.109:3000'],
+    origin: ['http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders:
       'Content-Type, Authorization, Origin, X-Requested-With, Accept',
@@ -23,7 +23,7 @@ app.use(
 );
 
 // application routes
-app.use('/api/v1', router);
+app.use('/api', router);
 
 //global error handler
 app.use(globalErrorHandler);
