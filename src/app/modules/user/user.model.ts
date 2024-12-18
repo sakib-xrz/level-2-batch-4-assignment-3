@@ -1,5 +1,63 @@
 import mongoose from 'mongoose';
+import { UserInterface, UserModel } from './user.interface';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
-const UserSchema = new mongoose.Schema({});
+const UserSchema = new mongoose.Schema<UserInterface, UserModel>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: ['admin', 'user'],
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      versionKey: false,
+    },
+  },
+);
 
-export const User = mongoose.model('User', UserSchema);
+UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this; // doc
+  const salt_round = Number(config.bcrypt_salt_rounds);
+  user.password = await bcrypt.hash(user.password, salt_round);
+  next();
+});
+
+UserSchema.statics.isUserExists = async function (id: string) {
+  return await User.findById(id).select('+password');
+};
+
+UserSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = mongoose.model<UserInterface, UserModel>(
+  'User',
+  UserSchema,
+);
