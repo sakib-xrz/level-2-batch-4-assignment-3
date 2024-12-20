@@ -57,8 +57,25 @@ const globalErrorHandler: ErrorRequestHandler = (err, _req, res, next) => {
         path: '',
       },
     ];
+  } else if (err?.name === 'TokenExpiredError') {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = 'Token has expired, please login again!';
+    errorSources = [
+      {
+        message: err.message,
+        path: '',
+      },
+    ];
+  } else if (err?.name === 'JsonWebTokenError') {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = 'Invalid token. Please provide a valid token.';
+    errorSources = [
+      {
+        message: err.message,
+        path: '',
+      },
+    ];
   }
-
   res.status(statusCode).json({
     success: false,
     message,

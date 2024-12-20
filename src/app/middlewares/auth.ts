@@ -11,7 +11,16 @@ type Role = 'admin' | 'user';
 const auth = (...roles: Role[]) => {
   return catchAsync(
     async (req: Request, _res: Response, next: NextFunction) => {
-      const token = req.headers.authorization;
+      const bearerToken = req.headers.authorization;
+
+      if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
+        throw new AppError(
+          httpStatus.UNAUTHORIZED,
+          'Invalid or missing authorization header',
+        );
+      }
+
+      const token = bearerToken.split(' ')[1];
 
       if (!token) {
         throw new AppError(

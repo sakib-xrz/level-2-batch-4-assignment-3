@@ -13,10 +13,6 @@ const CreateShecma = z.object({
       required_error: 'Content is required',
       invalid_type_error: 'Content must be a string',
     }),
-    author: z.string({
-      required_error: 'Author is required',
-      invalid_type_error: 'Author must be a string',
-    }),
     isPublished: z
       .boolean({
         invalid_type_error: 'isPublished must be a boolean',
