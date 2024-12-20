@@ -14,4 +14,12 @@ router
     BlogController.CreateBlog,
   );
 
+router
+  .route('/:id')
+  .patch(
+    auth('user'),
+    validateRequest(BlogValidation.UpdateShecma),
+    BlogController.UpdateBlog,
+  );
+
 export const BlogRoutes = router;
