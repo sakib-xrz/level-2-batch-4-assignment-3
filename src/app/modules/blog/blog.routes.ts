@@ -8,6 +8,7 @@ const router = express.Router();
 
 router
   .route('/')
+  .get(BlogController.GetBlogs)
   .post(
     auth('user'),
     validateRequest(BlogValidation.CreateShecma),
@@ -20,6 +21,7 @@ router
     auth('user'),
     validateRequest(BlogValidation.UpdateShecma),
     BlogController.UpdateBlog,
-  );
+  )
+  .delete(auth('user'), BlogController.DeleteBlog);
 
 export const BlogRoutes = router;

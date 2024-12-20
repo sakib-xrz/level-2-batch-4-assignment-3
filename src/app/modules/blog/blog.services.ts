@@ -3,6 +3,19 @@ import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { BlogInterface } from './blog.interface';
 import { Blog } from './blog.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+
+const GetBlogs = async (query: Record<string, unknown>) => {
+  const blogQuery = new QueryBuilder(Blog.find().populate('author'), query)
+    .search(['title', 'content'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await blogQuery.modelQuery;
+  return result;
+};
 
 const CreateBlog = async (author: string, payload: BlogInterface) => {
   const isAuthorExist = await User.findById(author);
@@ -50,6 +63,31 @@ const UpdateBlog = async (
   return result;
 };
 
-const BlogService = { CreateBlog, UpdateBlog };
+const DeleteBlog = async (id: string, author: string) => {
+  const blog = await Blog.findById(id);
+
+  if (!blog) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Blog not found');
+  }
+
+  const isAuthorExist = await User.findById(author);
+
+  if (!isAuthorExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Author not found');
+  }
+
+  const isAuthorBlog = blog.author.toString() === author.toString();
+
+  if (!isAuthorBlog) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "You can't delete other's blog",
+    );
+  }
+
+  await Blog.findByIdAndDelete(id);
+};
+
+const BlogService = { CreateBlog, UpdateBlog, DeleteBlog, GetBlogs };
 
 export default BlogService;
