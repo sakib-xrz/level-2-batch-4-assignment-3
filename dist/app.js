@@ -22,7 +22,7 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 // application routes
-app.use('/api/v1', routes_1.default);
+app.use('/api', routes_1.default);
 //global error handler
 app.use(globalErrorHandler_1.default);
 // handle not found routes
