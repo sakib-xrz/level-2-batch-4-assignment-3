@@ -18,7 +18,10 @@ const user_model_1 = require("../user/user.model");
 const blog_model_1 = require("./blog.model");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const GetBlogs = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const blogQuery = new QueryBuilder_1.default(blog_model_1.Blog.find().populate('author'), query)
+    const blogQuery = new QueryBuilder_1.default(blog_model_1.Blog.find().populate({
+        path: 'author',
+        select: '-role -isBlocked',
+    }), query)
         .search(['title', 'content'])
         .filter()
         .sort()
@@ -32,7 +35,10 @@ const CreateBlog = (author, payload) => __awaiter(void 0, void 0, void 0, functi
     if (!isAuthorExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Author not found');
     }
-    const result = (yield blog_model_1.Blog.create(Object.assign(Object.assign({}, payload), { author }))).populate('author');
+    const result = (yield blog_model_1.Blog.create(Object.assign(Object.assign({}, payload), { author }))).populate({
+        path: 'author',
+        select: '-role -isBlocked',
+    });
     return result;
 });
 const UpdateBlog = (id, author, payload) => __awaiter(void 0, void 0, void 0, function* () {

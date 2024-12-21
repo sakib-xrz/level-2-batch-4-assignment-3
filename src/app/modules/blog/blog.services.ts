@@ -6,7 +6,13 @@ import { Blog } from './blog.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 
 const GetBlogs = async (query: Record<string, unknown>) => {
-  const blogQuery = new QueryBuilder(Blog.find().populate('author'), query)
+  const blogQuery = new QueryBuilder(
+    Blog.find().populate({
+      path: 'author',
+      select: '-role -isBlocked',
+    }),
+    query,
+  )
     .search(['title', 'content'])
     .filter()
     .sort()
@@ -24,7 +30,10 @@ const CreateBlog = async (author: string, payload: BlogInterface) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Author not found');
   }
 
-  const result = (await Blog.create({ ...payload, author })).populate('author');
+  const result = (await Blog.create({ ...payload, author })).populate({
+    path: 'author',
+    select: '-role -isBlocked',
+  });
 
   return result;
 };
