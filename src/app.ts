@@ -12,10 +12,18 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders:
+      'Content-Type, Authorization, Origin, X-Requested-With, Accept',
+    credentials: true,
+  }),
+);
 
 // application routes
-app.use('/api', router);
+app.use('/api/v1', router);
 
 //global error handler
 app.use(globalErrorHandler);
