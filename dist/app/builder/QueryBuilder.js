@@ -20,15 +20,29 @@ class QueryBuilder {
     }
     filter() {
         const queryObj = Object.assign({}, this.query);
-        const excludeFields = ['search', 'sort', 'limit', 'page', 'fields'];
+        const excludeFields = [
+            'search',
+            'sortBy',
+            'sortOrder',
+            'limit',
+            'page',
+            'fields',
+        ];
         excludeFields.forEach((el) => delete queryObj[el]);
         this.modelQuery = this.modelQuery.find(queryObj);
         return this;
     }
     sort() {
-        var _a, _b, _c;
-        const sort = ((_c = (_b = (_a = this === null || this === void 0 ? void 0 : this.query) === null || _a === void 0 ? void 0 : _a.sort) === null || _b === void 0 ? void 0 : _b.split(',')) === null || _c === void 0 ? void 0 : _c.join(' ')) || '-createdAt';
-        this.modelQuery = this.modelQuery.sort(sort);
+        var _a, _b;
+        const sortBy = (_a = this === null || this === void 0 ? void 0 : this.query) === null || _a === void 0 ? void 0 : _a.sortBy;
+        const sortOrder = (_b = this === null || this === void 0 ? void 0 : this.query) === null || _b === void 0 ? void 0 : _b.sortOrder;
+        if (sortBy) {
+            const order = sortOrder === 'asc' ? '' : '-';
+            this.modelQuery = this.modelQuery.sort(`${order}${sortBy}`);
+        }
+        else {
+            this.modelQuery = this.modelQuery.sort('-createdAt');
+        }
         return this;
     }
     paginate() {
