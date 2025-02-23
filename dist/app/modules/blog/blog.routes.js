@@ -8,14 +8,13 @@ const express_1 = __importDefault(require("express"));
 const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
 const blog_validation_1 = __importDefault(require("./blog.validation"));
 const blog_controller_1 = __importDefault(require("./blog.controller"));
-const auth_1 = __importDefault(require("../../middlewares/auth"));
 const router = express_1.default.Router();
 router
     .route('/')
     .get(blog_controller_1.default.GetBlogs)
-    .post((0, auth_1.default)('user'), (0, validateRequest_1.default)(blog_validation_1.default.CreateShecma), blog_controller_1.default.CreateBlog);
+    .post((0, validateRequest_1.default)(blog_validation_1.default.CreateShecma), blog_controller_1.default.CreateBlog);
 router
     .route('/:id')
-    .patch((0, auth_1.default)('user'), (0, validateRequest_1.default)(blog_validation_1.default.UpdateShecma), blog_controller_1.default.UpdateBlog)
-    .delete((0, auth_1.default)('user'), blog_controller_1.default.DeleteBlog);
+    .patch((0, validateRequest_1.default)(blog_validation_1.default.UpdateShecma), blog_controller_1.default.UpdateBlog)
+    .delete(blog_controller_1.default.DeleteBlog);
 exports.BlogRoutes = router;
