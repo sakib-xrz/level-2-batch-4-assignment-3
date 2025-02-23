@@ -23,6 +23,15 @@ const GetBlogs = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const GetMyBlogs = async (author: string) => {
+  const result = await Blog.find({ author }).populate({
+    path: 'author',
+    select: '-role -isBlocked',
+  });
+
+  return result;
+};
+
 const CreateBlog = async (author: string, payload: BlogInterface) => {
   const isAuthorExist = await User.findById(author);
 
@@ -97,6 +106,12 @@ const DeleteBlog = async (id: string, author: string) => {
   await Blog.findByIdAndDelete(id);
 };
 
-const BlogService = { CreateBlog, UpdateBlog, DeleteBlog, GetBlogs };
+const BlogService = {
+  CreateBlog,
+  UpdateBlog,
+  DeleteBlog,
+  GetBlogs,
+  GetMyBlogs,
+};
 
 export default BlogService;

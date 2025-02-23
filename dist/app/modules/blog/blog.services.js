@@ -30,6 +30,13 @@ const GetBlogs = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield blogQuery.modelQuery;
     return result;
 });
+const GetMyBlogs = (author) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield blog_model_1.Blog.find({ author }).populate({
+        path: 'author',
+        select: '-role -isBlocked',
+    });
+    return result;
+});
 const CreateBlog = (author, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isAuthorExist = yield user_model_1.User.findById(author);
     if (!isAuthorExist) {
@@ -75,5 +82,11 @@ const DeleteBlog = (id, author) => __awaiter(void 0, void 0, void 0, function* (
     }
     yield blog_model_1.Blog.findByIdAndDelete(id);
 });
-const BlogService = { CreateBlog, UpdateBlog, DeleteBlog, GetBlogs };
+const BlogService = {
+    CreateBlog,
+    UpdateBlog,
+    DeleteBlog,
+    GetBlogs,
+    GetMyBlogs,
+};
 exports.default = BlogService;

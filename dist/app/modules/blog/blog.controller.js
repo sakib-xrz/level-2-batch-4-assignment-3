@@ -25,6 +25,16 @@ const GetBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
         data: result,
     });
 }));
+const GetMyBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const author = req.user._id;
+    const result = yield blog_services_1.default.GetMyBlogs(author);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Blogs fetched successfully',
+        data: result,
+    });
+}));
 const CreateBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const author = req.user._id;
     const result = yield blog_services_1.default.CreateBlog(author, req.body);
@@ -56,5 +66,11 @@ const DeleteBlog = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         message: 'Blog deleted successfully',
     });
 }));
-const BlogController = { GetBlogs, CreateBlog, UpdateBlog, DeleteBlog };
+const BlogController = {
+    GetBlogs,
+    CreateBlog,
+    UpdateBlog,
+    DeleteBlog,
+    GetMyBlogs,
+};
 exports.default = BlogController;

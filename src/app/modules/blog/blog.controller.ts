@@ -14,6 +14,18 @@ const GetBlogs = catchAsync(async (req, res) => {
   });
 });
 
+const GetMyBlogs = catchAsync(async (req, res) => {
+  const author = req.user._id;
+  const result = await BlogService.GetMyBlogs(author);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Blogs fetched successfully',
+    data: result,
+  });
+});
+
 const CreateBlog = catchAsync(async (req, res) => {
   const author = req.user._id;
   const result = await BlogService.CreateBlog(author, req.body);
@@ -51,6 +63,12 @@ const DeleteBlog = catchAsync(async (req, res) => {
   });
 });
 
-const BlogController = { GetBlogs, CreateBlog, UpdateBlog, DeleteBlog };
+const BlogController = {
+  GetBlogs,
+  CreateBlog,
+  UpdateBlog,
+  DeleteBlog,
+  GetMyBlogs,
+};
 
 export default BlogController;

@@ -15,6 +15,8 @@ router
     BlogController.CreateBlog,
   );
 
+router.get('/me', auth('user'), BlogController.GetMyBlogs);
+
 router
   .route('/:id')
   .patch(

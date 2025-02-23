@@ -14,6 +14,7 @@ router
     .route('/')
     .get(blog_controller_1.default.GetBlogs)
     .post((0, auth_1.default)('user'), (0, validateRequest_1.default)(blog_validation_1.default.CreateShecma), blog_controller_1.default.CreateBlog);
+router.get('/me', (0, auth_1.default)('user'), blog_controller_1.default.GetMyBlogs);
 router
     .route('/:id')
     .patch((0, auth_1.default)('user'), (0, validateRequest_1.default)(blog_validation_1.default.UpdateShecma), blog_controller_1.default.UpdateBlog)
